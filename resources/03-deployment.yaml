@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  # Unique key of the Deployment instance
+  name: deployment-example
+spec:
+  # 3 Pods should exist at all times.
+  replicas: 3
+  # Keep record of 2 revisions for rollback
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: "20%"
+  template:
+    metadata:
+      labels:
+        # Apply this label to pods and default
+        # the Deployment label selector to this value
+        app: nginx
+      annotations:
+        kubernetes.io/change-cause: "Update nginx to 1.10"
+    spec:
+      containers:
+      - name: nginx
+        # Run this image
+        image: nginx:1.10
